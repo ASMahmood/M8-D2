@@ -21,4 +21,14 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
+UserSchema.statics.findByCrendor = async function (username, password) {
+  const user = await this.findOne({ username });
+
+  if (user) {
+    const matching = await bcrypt.compare(password, user.password);
+    if (matching) return user;
+    else return null;
+  } else return null;
+};
+
 module.exports = model("User", UserSchema);
